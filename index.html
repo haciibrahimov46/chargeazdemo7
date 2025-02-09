@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Store</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #57a695;
+            transition: background-color 0.3s, padding 0.3s;
+            padding: 15px 0;
+        }
+        .navbar-brand img {
+            height: 40px; /* Şəklin hündürlüyü */
+            transition: transform 0.3s ease; /* Hover effekti üçün */
+        }
+
+        .navbar-brand img:hover {
+            transform: scale(1.1); /* Hover zamanı şəkli böyüt */
+        }
+
+        .navbar.scrolled {
+            background-color: #57a695;
+            padding: 10px 0;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffdd57;
+            bottom: 0;
+            left: 50%;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .dropdown-menu {
+            background-color: #57a695;
+            border: none;
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+        }
+
+        .dropdown-item:hover {
+            background-color: #57a695;
+        }
+
+        .carousel-item img {
+            max-height: 600px;
+            object-fit: cover;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .product-card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #fff;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card img {
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .btn-primary {
+            background-color: #57a695;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background-color: #57a695;
+            transform: translateY(-3px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .btn-primary:active::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .service-section {
+            background: linear-gradient(135deg, #57a695, #57a695);
+ padding: 50px 0;
+            color: #fff;
+            text-align: center;
+            transition: background 0.5s ease;
+        }
+
+        .service-section.scrolled {
+            background: linear-gradient(135deg, #000000, #000000);
+        }
+
+        .service-card {
+            background-color: #fff;
+            color: #333;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card i {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #2563eb;
+        }
+
+        .service-card h5 {
+            margin-top: 15px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .footer {
+            background-color: #1b1b1b;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .sub-cards {
+            margin-top: 10px;
+            padding: 0;
+            overflow: hidden;
+            height: 0;
+            transition: height 0.5s ease-in-out;
+        }
+
+        .sub-cards .card {
+            margin-bottom: 10px;
+            height: 100px;
+            background-color: #f8f9fa;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .sub-cards .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-cards .card img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        .sub-cards .card:hover img {
+            transform: scale(1.1);
+        }
+
+        .sub-cards .card h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .animated {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .new-section {
+            background-color: #57a695;
+            padding: 200px 0;
+            color: #fff;
+            text-align: center;
+        }
+
+        .new-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .new-section p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+        }
+
+        .new-section .btn {
+            background-color: #fff;
+            color: #ff6f61;
+            padding: 10px 30px;
+            font-weight: 600;
+            border-radius: 25px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .new-section .btn:hover {
+            background-color: #030303;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+        /* Navbar İconları üçün ümumi tənzimləmələr */
+.navbar-icons {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-icons a {
+    transition: opacity 0.3s ease;
+}
+
+.navbar-icons a:hover {
+    opacity: 0.8;
+}
+
+/* Mobil üçün iconların sol tərəfdə olması */
+@media (max-width: 991.98px) {
+    .navbar-icons {
+        margin-left: auto; /* Iconları sağa çəkir */
+        padding-right: 15px; /* Iconlar ilə navbar arasında boşluq */
+    }
+}
+.video-section {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+        }
+
+        /* Video Konteyneri */
+        .video-container {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Video Pleyer */
+        .video-player {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .video-player:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-player video {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        /* Video Başlığı */
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .video-title.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pankartlar */
+        .pankart {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pankart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .pankart i {
+            font-size: 24px;
+            color: #2563eb;
+        }
+
+        .pankart h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        .pankart p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <!-- Navbar Brand (Sol tərəf) -->
+        <a class="navbar-brand" href="#"> <a class="navbar-brand" href="#">
+            <img src="./v3-removebg-mePvDnGNgju3r9l8.avif" alt="My Store Logo">
+        </a></a>
+
+        <!-- Toggler Button (Mobil üçün) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Ortada Navbar Linkləri -->
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Əsas</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        Məhsullar
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">İctimai Stansiyalar</a></li>
+                        <li><a class="dropdown-item" href="#">Avadanlıqlar</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Əlaqə</a></li>
+            </ul>
+
+            <!-- Sağ tərəfdə Endirmə Iconları (Kompyuter üçün) -->
+            <div class="navbar-icons d-none d-lg-flex">
+                <a href="#" class="text-white me-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" style="height: 30px;">
+                </a>
+                <a href="#" class="text-white">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style="height: 30px;">
+                </a>
+            </div>
+        </div>
+
+        <!-- Mobil üçün Endirmə Iconları (Navbar içində, sol tərəfdə) -->
+        <div class="navbar-icons d-lg-none">
+            <a href="#" class="text-white me-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" style="height: 30px;">
+            </a>
+            <a href="#" class="text-white">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style="height: 30px;">
+            </a>
+        </div>
+    </div>
+</nav>
+
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://via.placeholder.com/1200x600" class="d-block w-100" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x600" class="d-block w-100" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1200x600" class="d-block w-100" alt="Slide 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row">
+            <!-- Yalnız 3 məhsul -->
+            <div class="col-md-4 animated">
+                <div class="card product-card">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 1">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Product 1</h5>
+                        <p class="card-text">$99.99</p>
+                        <button class="btn btn-primary">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 animated">
+                <div class="card product-card">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 2">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Product 2</h5>
+                        <p class="card-text">$89.99</p>
+                        <button class="btn btn-primary">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 animated">
+                <div class="card product-card">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Product 3</h5>
+                        <p class="card-text">$79.99</p>
+                        <button class="btn btn-primary">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="service-section">
+        <h2 class="mb-4">Our Services</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 animated">
+                    <div class="card service-card" onclick="toggleSubCards('ictimai')">
+                        <i class="bi bi-house-door"></i>
+                        <h5>İctimai Stansiyalar</h5>
+                        <p>Əlavə məlumatlar üçün klikləyin.</p>
+                    </div>
+                    <div id="ictimai" class="sub-cards">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Stansiya Məntəqələri">
+                                    <h5>Stansiya Məntəqələri</h5>
+                                    <p>İctimai stansiyaların məntəqələri haqqında məlumat.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Stansiyadan İstifadə">
+                                    <h5>Stansiyadan İstifadə</h5>
+                                    <p>Stansiyadan necə istifadə edə bilərsiniz?</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Stansiya Tipləri">
+                                    <h5>Stansiya Tipləri</h5>
+                                    <p>Fərqli stansiya növləri haqqında məlumat.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 animated">
+                    <div class="card service-card" onclick="toggleSubCards('avadanliqlar')">
+                        <i class="bi bi-tools"></i>
+                        <h5>Avadanlıqlar</h5>
+                        <p>Əlavə məlumatlar üçün klikləyin.</p>
+                    </div>
+                    <div id="avadanliqlar" class="sub-cards">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Divar Tipli Cihazlar">
+                                    <h5>Divar Tipli Cihazlar</h5>
+                                    <p>Divara quraşdırılan cihazlar haqqında məlumat.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Daşına Bilən Cihazlar">
+                                    <h5>Daşına Bilən Cihazlar</h5>
+                                    <p>Daşınabilən cihazlar haqqında məlumat.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card service-card">
+                                    <img src="https://via.placeholder.com/50" alt="Aksesuarlar">
+                                    <h5>Aksesuarlar</h5>
+                                    <p>Cihazlar üçün aksesuarlar haqqında məlumat.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="new-section">
+        <div class="container">
+          <div class="video-section">
+            <div class="container">
+                <div class="row">
+                    <!-- Sol tərəf: Pankartlar -->
+                    <div class="col-md-4">
+                        <div class="pankart" onclick="changeVideo('Qeydiyyat', 'https://www.w3schools.com/html/mov_bbb.mp4')">
+                            <i class="bi bi-person-plus"></i>
+                            <div>
+                                <h5>1. Necə Qeydiyyatdan Keçməli?</h5>
+                                <p>Qeydiyyat prosesi haqqında ətraflı məlumat.</p>
+                            </div>
+                        </div>
+                        <div class="pankart" onclick="changeVideo('Kart Əlavə Etmə', 'https://www.w3schools.com/html/mov_bbb.mp4')">
+                            <i class="bi bi-credit-card"></i>
+                            <div>
+                                <h5>2. Necə Kart Əlavə Etməli?</h5>
+                                <p>Kart əlavə etmək üçün təlimatlar.</p>
+                            </div>
+                        </div>
+                        <div class="pankart" onclick="changeVideo('Stansiyanı İşə Salma', 'https://www.w3schools.com/html/mov_bbb.mp4')">
+                            <i class="bi bi-play-circle"></i>
+                            <div>
+                                <h5>3. Necə Stansiyanı İşə Salmalı?</h5>
+                                <p>Stansiyanın işə salınması üçün addımlar.</p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Sağ tərəf: Video Pleyer -->
+                    <div class="col-md-8">
+                        <div class="video-container">
+                            <div class="video-player">
+                                <video id="videoPlayer" controls>
+                                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div id="videoTitle" class="video-title">Qeydiyyat</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+            <a href="#" class="btn">Daha Ətraflı</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 My Store. All rights reserved.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            const serviceSection = document.querySelector('.service-section');
+            const newSection = document.querySelector('.new-section');
+
+            if (window.scrollY > newSection.offsetTop - 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > newSection.offsetTop - 200) {
+                serviceSection.classList.add('scrolled');
+            } else {
+                serviceSection.classList.remove('scrolled');
+            }
+        });
+
+        function toggleSubCards(section) {
+            var subCards = document.getElementById(section);
+            if (subCards.style.height === '0px' || subCards.style.height === '') {
+                subCards.style.height = subCards.scrollHeight + 'px';
+            } else {
+                subCards.style.height = '0px';
+            }
+        }
+        function changeVideo(title, videoUrl) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+
+            // Video dəyişdir
+            videoPlayer.src = videoUrl;
+            videoPlayer.load();
+            videoPlayer.play();
+
+            // Başlıq animasiyası
+            videoTitle.textContent = title;
+            videoTitle.classList.remove('active');
+            setTimeout(() => videoTitle.classList.add('active'), 10);
+        }
+    </script>
+</body>
+</html>
